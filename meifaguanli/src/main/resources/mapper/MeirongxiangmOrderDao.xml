@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.MeirongxiangmOrderDao">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        a.id as id
+        ,a.meirongxiangm_order_uuid_number as meirongxiangmOrderUuidNumber
+        ,a.meirongxiangm_id as meirongxiangmId
+        ,a.yonghu_id as yonghuId
+        ,a.meirongxiangm_order_time as meirongxiangmOrderTime
+        ,a.meirongxiangm_order_true_price as meirongxiangmOrderTruePrice
+        ,a.meirongxiangm_order_types as meirongxiangmOrderTypes
+        ,a.meirongxiangm_order_payment_types as meirongxiangmOrderPaymentTypes
+        ,a.insert_time as insertTime
+        ,a.create_time as createTime
+    </sql>
+    <select id="selectListView" parameterType="map" resultType="com.entity.view.MeirongxiangmOrderView" >
+        SELECT
+        <include refid="Base_Column_List" />
+        <!-- 级联表的字段 -->
+        ,meirongxiangm.meirongxiangm_name as meirongxiangmName
+        ,meirongxiangm.meirongxiangm_photo as meirongxiangmPhoto
+        ,meirongxiangm.zan_number as zanNumber
+        ,meirongxiangm.cai_number as caiNumber
+        ,meirongxiangm.meirongxiangm_new_money as meirongxiangmNewMoney
+        ,meirongxiangm.meirongxiangm_types as meirongxiangmTypes
+        ,meirongxiangm.meirongxiangm_price as meirongxiangmPrice
+        ,meirongxiangm.meirongxiangm_clicknum as meirongxiangmClicknum
+        ,meirongxiangm.meirongxiangm_content as meirongxiangmContent
+        ,meirongxiangm.meirongxiangm_delete as meirongxiangmDelete
+        ,yonghu.yonghu_name as yonghuName
+        ,yonghu.yonghu_phone as yonghuPhone
+        ,yonghu.yonghu_id_number as yonghuIdNumber
+        ,yonghu.yonghu_photo as yonghuPhoto
+        ,yonghu.yonghu_email as yonghuEmail
+        ,yonghu.new_money as newMoney
+        ,yonghu.yonghu_new_jifen as yonghuNewJifen
+        ,yonghu.huiyuandengji_types as huiyuandengjiTypes
+        ,yonghu.yonghu_delete as yonghuDelete
+
+        FROM meirongxiangm_order  a
+        left JOIN meirongxiangm meirongxiangm ON a.meirongxiangm_id = meirongxiangm.id
+        left JOIN yonghu yonghu ON a.yonghu_id = yonghu.id
+
+        <where>
+            <if test="params.ids != null">
+                and a.id in
+                <foreach item="item" index="index" collection="params.ids" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+            </if>
+            <if test=" params.meirongxiangmOrderUuidNumber != '' and params.meirongxiangmOrderUuidNumber != null and params.meirongxiangmOrderUuidNumber != 'null' ">
+                and a.meirongxiangm_order_uuid_number like CONCAT('%',#{params.meirongxiangmOrderUuidNumber},'%')
+            </if>
+            <if test="params.meirongxiangmId != null and params.meirongxiangmId != ''">
+                and (
+                    a.meirongxiangm_id = #{params.meirongxiangmId}
+                )
+            </if>
+            <if test="params.yonghuId != null and params.yonghuId != ''">
+                and (
+                    a.yonghu_id = #{params.yonghuId}
+                )
+            </if>
+            <if test=" params.meirongxiangmOrderTimeStart != '' and params.meirongxiangmOrderTimeStart != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.meirongxiangm_order_time) >= UNIX_TIMESTAMP(#{params.meirongxiangmOrderTimeStart}) ]]>
+            </if>
+            <if test=" params.meirongxiangmOrderTimeEnd != '' and params.meirongxiangmOrderTimeEnd != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.meirongxiangm_order_time) <= UNIX_TIMESTAMP(#{params.meirongxiangmOrderTimeEnd}) ]]>
+            </if>
+            <if test="params.meirongxiangmOrderTime != null and params.meirongxiangmOrderTime != ''">
+                and a.meirongxiangm_order_time = #{params.meirongxiangmOrderTime}
+            </if>
+            <if test="params.meirongxiangmOrderTruePriceStart != null ">
+                <![CDATA[  and a.meirongxiangm_order_true_price >= #{params.meirongxiangmOrderTruePriceStart}   ]]>
+            </if>
+            <if test="params.meirongxiangmOrderTruePriceEnd != null ">
+                <![CDATA[  and a.meirongxiangm_order_true_price <= #{params.meirongxiangmOrderTruePriceEnd}   ]]>
+            </if>
+            <if test="params.meirongxiangmOrderTruePrice != null and params.meirongxiangmOrderTruePrice != ''">
+                and a.meirongxiangm_order_true_price = #{params.meirongxiangmOrderTruePrice}
+            </if>
+            <if test="params.meirongxiangmOrderTypes != null and params.meirongxiangmOrderTypes != ''">
+                and a.meirongxiangm_order_types = #{params.meirongxiangmOrderTypes}
+            </if>
+            <if test="params.meirongxiangmOrderPaymentTypes != null and params.meirongxiangmOrderPaymentTypes != ''">
+                and a.meirongxiangm_order_payment_types = #{params.meirongxiangmOrderPaymentTypes}
+            </if>
+            <if test=" params.insertTimeStart != '' and params.insertTimeStart != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.insert_time) >= UNIX_TIMESTAMP(#{params.insertTimeStart}) ]]>
+            </if>
+            <if test=" params.insertTimeEnd != '' and params.insertTimeEnd != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.insert_time) <= UNIX_TIMESTAMP(#{params.insertTimeEnd}) ]]>
+            </if>
+            <if test="params.insertTime != null and params.insertTime != ''">
+                and a.insert_time = #{params.insertTime}
+            </if>
+
+                <!-- 判断美容项目的id不为空 -->
+            <if test=" params.meirongxiangmIdNotNull != '' and params.meirongxiangmIdNotNull != null and params.meirongxiangmIdNotNull != 'null' ">
+                and a.meirongxiangm_id IS NOT NULL
+            </if>
+            <if test=" params.meirongxiangmName != '' and params.meirongxiangmName != null and params.meirongxiangmName != 'null' ">
+                and meirongxiangm.meirongxiangm_name like CONCAT('%',#{params.meirongxiangmName},'%')
+            </if>
+            <if test="params.zanNumberStart != null  and params.zanNumberStart != '' ">
+                <![CDATA[  and meirongxiangm.zan_number >= #{params.zanNumberStart}   ]]>
+            </if>
+            <if test="params.zanNumberEnd != null  and params.zanNumberEnd != '' ">
+                <![CDATA[  and meirongxiangm.zan_number <= #{params.zanNumberEnd}   ]]>
+            </if>
+            <if test="params.zanNumber != null  and params.zanNumber != '' ">
+                and meirongxiangm.zan_number = #{params.zanNumber}
+            </if>
+            <if test="params.caiNumberStart != null  and params.caiNumberStart != '' ">
+                <![CDATA[  and meirongxiangm.cai_number >= #{params.caiNumberStart}   ]]>
+            </if>
+            <if test="params.caiNumberEnd != null  and params.caiNumberEnd != '' ">
+                <![CDATA[  and meirongxiangm.cai_number <= #{params.caiNumberEnd}   ]]>
+            </if>
+            <if test="params.caiNumber != null  and params.caiNumber != '' ">
+                and meirongxiangm.cai_number = #{params.caiNumber}
+            </if>
+            <if test="params.meirongxiangmNewMoneyStart != null ">
+                <![CDATA[  and meirongxiangm.meirongxiangm_new_money >= #{params.meirongxiangmNewMoneyStart}   ]]>
+            </if>
+            <if test="params.meirongxiangmNewMoneyEnd != null ">
+                <![CDATA[  and meirongxiangm.meirongxiangm_new_money <= #{params.meirongxiangmNewMoneyEnd}   ]]>
+            </if>
+            <if test="params.meirongxiangmNewMoney != null and params.meirongxiangmNewMoney != ''">
+                and a.meirongxiangm_new_money = #{params.meirongxiangmNewMoney}
+            </if>
+            <if test="params.meirongxiangmTypes != null  and params.meirongxiangmTypes != ''">
+                and meirongxiangm.meirongxiangm_types = #{params.meirongxiangmTypes}
+            </if>
+
+            <if test="params.meirongxiangmPriceStart != null  and params.meirongxiangmPriceStart != '' ">
+                <![CDATA[  and meirongxiangm.meirongxiangm_price >= #{params.meirongxiangmPriceStart}   ]]>
+            </if>
+            <if test="params.meirongxiangmPriceEnd != null  and params.meirongxiangmPriceEnd != '' ">
+                <![CDATA[  and meirongxiangm.meirongxiangm_price <= #{params.meirongxiangmPriceEnd}   ]]>
+            </if>
+            <if test="params.meirongxiangmPrice != null  and params.meirongxiangmPrice != '' ">
+                and meirongxiangm.meirongxiangm_price = #{params.meirongxiangmPrice}
+            </if>
+            <if test="params.meirongxiangmClicknumStart != null  and params.meirongxiangmClicknumStart != '' ">
+                <![CDATA[  and meirongxiangm.meirongxiangm_clicknum >= #{params.meirongxiangmClicknumStart}   ]]>
+            </if>
+            <if test="params.meirongxiangmClicknumEnd != null  and params.meirongxiangmClicknumEnd != '' ">
+                <![CDATA[  and meirongxiangm.meirongxiangm_clicknum <= #{params.meirongxiangmClicknumEnd}   ]]>
+            </if>
+            <if test="params.meirongxiangmClicknum != null  and params.meirongxiangmClicknum != '' ">
+                and meirongxiangm.meirongxiangm_clicknum = #{params.meirongxiangmClicknum}
+            </if>
+            <if test=" params.meirongxiangmContent != '' and params.meirongxiangmContent != null and params.meirongxiangmContent != 'null' ">
+                and meirongxiangm.meirongxiangm_content like CONCAT('%',#{params.meirongxiangmContent},'%')
+            </if>
+            <if test="params.meirongxiangmDeleteStart != null  and params.meirongxiangmDeleteStart != '' ">
+                <![CDATA[  and meirongxiangm.meirongxiangm_delete >= #{params.meirongxiangmDeleteStart}   ]]>
+            </if>
+            <if test="params.meirongxiangmDeleteEnd != null  and params.meirongxiangmDeleteEnd != '' ">
+                <![CDATA[  and meirongxiangm.meirongxiangm_delete <= #{params.meirongxiangmDeleteEnd}   ]]>
+            </if>
+            <if test="params.meirongxiangmDelete != null  and params.meirongxiangmDelete != '' ">
+                and meirongxiangm.meirongxiangm_delete = #{params.meirongxiangmDelete}
+            </if>
+            <if test=" params.insertTimeStart != '' and params.insertTimeStart != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(meirongxiangm.insert_time) >= UNIX_TIMESTAMP(#{params.insertTimeStart}) ]]>
+            </if>
+            <if test=" params.insertTimeEnd != '' and params.insertTimeEnd != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(meirongxiangm.insert_time) <= UNIX_TIMESTAMP(#{params.insertTimeEnd}) ]]>
+            </if>
+            <if test="params.insertTime != null and params.insertTime != ''">
+                and a.insert_time = #{params.insertTime}
+            </if>
+                <!-- 判断用户的id不为空 -->
+            <if test=" params.yonghuIdNotNull != '' and params.yonghuIdNotNull != null and params.yonghuIdNotNull != 'null' ">
+                and a.yonghu_id IS NOT NULL
+            </if>
+            <if test=" params.yonghuName != '' and params.yonghuName != null and params.yonghuName != 'null' ">
+                and yonghu.yonghu_name like CONCAT('%',#{params.yonghuName},'%')
+            </if>
+            <if test=" params.yonghuPhone != '' and params.yonghuPhone != null and params.yonghuPhone != 'null' ">
+                and yonghu.yonghu_phone like CONCAT('%',#{params.yonghuPhone},'%')
+            </if>
+            <if test=" params.yonghuIdNumber != '' and params.yonghuIdNumber != null and params.yonghuIdNumber != 'null' ">
+                and yonghu.yonghu_id_number like CONCAT('%',#{params.yonghuIdNumber},'%')
+            </if>
+            <if test=" params.yonghuEmail != '' and params.yonghuEmail != null and params.yonghuEmail != 'null' ">
+                and yonghu.yonghu_email like CONCAT('%',#{params.yonghuEmail},'%')
+            </if>
+            <if test="params.newMoneyStart != null ">
+                <![CDATA[  and yonghu.new_money >= #{params.newMoneyStart}   ]]>
+            </if>
+            <if test="params.newMoneyEnd != null ">
+                <![CDATA[  and yonghu.new_money <= #{params.newMoneyEnd}   ]]>
+            </if>
+            <if test="params.newMoney != null and params.newMoney != ''">
+                and a.new_money = #{params.newMoney}
+            </if>
+            <if test="params.yonghuNewJifenStart != null ">
+                <![CDATA[  and yonghu.yonghu_new_jifen >= #{params.yonghuNewJifenStart}   ]]>
+            </if>
+            <if test="params.yonghuNewJifenEnd != null ">
+                <![CDATA[  and yonghu.yonghu_new_jifen <= #{params.yonghuNewJifenEnd}   ]]>
+            </if>
+            <if test="params.yonghuNewJifen != null and params.yonghuNewJifen != ''">
+                and a.yonghu_new_jifen = #{params.yonghuNewJifen}
+            </if>
+            <if test="params.huiyuandengjiTypes != null  and params.huiyuandengjiTypes != ''">
+                and yonghu.huiyuandengji_types = #{params.huiyuandengjiTypes}
+            </if>
+
+            <if test="params.yonghuDeleteStart != null  and params.yonghuDeleteStart != '' ">
+                <![CDATA[  and yonghu.yonghu_delete >= #{params.yonghuDeleteStart}   ]]>
+            </if>
+            <if test="params.yonghuDeleteEnd != null  and params.yonghuDeleteEnd != '' ">
+                <![CDATA[  and yonghu.yonghu_delete <= #{params.yonghuDeleteEnd}   ]]>
+            </if>
+            <if test="params.yonghuDelete != null  and params.yonghuDelete != '' ">
+                and yonghu.yonghu_delete = #{params.yonghuDelete}
+            </if>
+            <if test=" params.insertTimeStart != '' and params.insertTimeStart != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(yonghu.insert_time) >= UNIX_TIMESTAMP(#{params.insertTimeStart}) ]]>
+            </if>
+            <if test=" params.insertTimeEnd != '' and params.insertTimeEnd != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(yonghu.insert_time) <= UNIX_TIMESTAMP(#{params.insertTimeEnd}) ]]>
+            </if>
+            <if test="params.insertTime != null and params.insertTime != ''">
+                and a.insert_time = #{params.insertTime}
+            </if>
+        </where>
+        order by a.${params.sort} ${params.order}
+    </select>
+
+</mapper>

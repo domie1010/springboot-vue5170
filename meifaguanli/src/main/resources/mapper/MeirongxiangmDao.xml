@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.MeirongxiangmDao">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        a.id as id
+        ,a.meirongxiangm_name as meirongxiangmName
+        ,a.meirongxiangm_photo as meirongxiangmPhoto
+        ,a.zan_number as zanNumber
+        ,a.cai_number as caiNumber
+        ,a.meirongxiangm_new_money as meirongxiangmNewMoney
+        ,a.meirongxiangm_types as meirongxiangmTypes
+        ,a.meirongxiangm_price as meirongxiangmPrice
+        ,a.meirongxiangm_clicknum as meirongxiangmClicknum
+        ,a.meirongxiangm_content as meirongxiangmContent
+        ,a.meirongxiangm_delete as meirongxiangmDelete
+        ,a.insert_time as insertTime
+        ,a.create_time as createTime
+    </sql>
+    <select id="selectListView" parameterType="map" resultType="com.entity.view.MeirongxiangmView" >
+        SELECT
+        <include refid="Base_Column_List" />
+        <!-- 级联表的字段 -->
+
+        FROM meirongxiangm  a
+
+        <where>
+            <if test="params.ids != null">
+                and a.id in
+                <foreach item="item" index="index" collection="params.ids" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+            </if>
+            <if test=" params.meirongxiangmName != '' and params.meirongxiangmName != null and params.meirongxiangmName != 'null' ">
+                and a.meirongxiangm_name like CONCAT('%',#{params.meirongxiangmName},'%')
+            </if>
+            <if test="params.zanNumberStart != null and params.zanNumberStart != ''">
+                <![CDATA[  and a.zan_number >= #{params.zanNumberStart}   ]]>
+            </if>
+            <if test="params.zanNumberEnd != null and params.zanNumberEnd != ''">
+                <![CDATA[  and a.zan_number <= #{params.zanNumberEnd}   ]]>
+            </if>
+             <if test="params.zanNumber != null and params.zanNumber != ''">
+                and a.zan_number = #{params.zanNumber}
+             </if>
+            <if test="params.caiNumberStart != null and params.caiNumberStart != ''">
+                <![CDATA[  and a.cai_number >= #{params.caiNumberStart}   ]]>
+            </if>
+            <if test="params.caiNumberEnd != null and params.caiNumberEnd != ''">
+                <![CDATA[  and a.cai_number <= #{params.caiNumberEnd}   ]]>
+            </if>
+             <if test="params.caiNumber != null and params.caiNumber != ''">
+                and a.cai_number = #{params.caiNumber}
+             </if>
+            <if test="params.meirongxiangmNewMoneyStart != null ">
+                <![CDATA[  and a.meirongxiangm_new_money >= #{params.meirongxiangmNewMoneyStart}   ]]>
+            </if>
+            <if test="params.meirongxiangmNewMoneyEnd != null ">
+                <![CDATA[  and a.meirongxiangm_new_money <= #{params.meirongxiangmNewMoneyEnd}   ]]>
+            </if>
+            <if test="params.meirongxiangmNewMoney != null and params.meirongxiangmNewMoney != ''">
+                and a.meirongxiangm_new_money = #{params.meirongxiangmNewMoney}
+            </if>
+            <if test="params.meirongxiangmTypes != null and params.meirongxiangmTypes != ''">
+                and a.meirongxiangm_types = #{params.meirongxiangmTypes}
+            </if>
+            <if test="params.meirongxiangmPriceStart != null and params.meirongxiangmPriceStart != ''">
+                <![CDATA[  and a.meirongxiangm_price >= #{params.meirongxiangmPriceStart}   ]]>
+            </if>
+            <if test="params.meirongxiangmPriceEnd != null and params.meirongxiangmPriceEnd != ''">
+                <![CDATA[  and a.meirongxiangm_price <= #{params.meirongxiangmPriceEnd}   ]]>
+            </if>
+             <if test="params.meirongxiangmPrice != null and params.meirongxiangmPrice != ''">
+                and a.meirongxiangm_price = #{params.meirongxiangmPrice}
+             </if>
+            <if test="params.meirongxiangmClicknumStart != null and params.meirongxiangmClicknumStart != ''">
+                <![CDATA[  and a.meirongxiangm_clicknum >= #{params.meirongxiangmClicknumStart}   ]]>
+            </if>
+            <if test="params.meirongxiangmClicknumEnd != null and params.meirongxiangmClicknumEnd != ''">
+                <![CDATA[  and a.meirongxiangm_clicknum <= #{params.meirongxiangmClicknumEnd}   ]]>
+            </if>
+             <if test="params.meirongxiangmClicknum != null and params.meirongxiangmClicknum != ''">
+                and a.meirongxiangm_clicknum = #{params.meirongxiangmClicknum}
+             </if>
+            <if test=" params.meirongxiangmContent != '' and params.meirongxiangmContent != null and params.meirongxiangmContent != 'null' ">
+                and a.meirongxiangm_content like CONCAT('%',#{params.meirongxiangmContent},'%')
+            </if>
+            <if test="params.meirongxiangmDeleteStart != null and params.meirongxiangmDeleteStart != ''">
+                <![CDATA[  and a.meirongxiangm_delete >= #{params.meirongxiangmDeleteStart}   ]]>
+            </if>
+            <if test="params.meirongxiangmDeleteEnd != null and params.meirongxiangmDeleteEnd != ''">
+                <![CDATA[  and a.meirongxiangm_delete <= #{params.meirongxiangmDeleteEnd}   ]]>
+            </if>
+             <if test="params.meirongxiangmDelete != null and params.meirongxiangmDelete != ''">
+                and a.meirongxiangm_delete = #{params.meirongxiangmDelete}
+             </if>
+            <if test=" params.insertTimeStart != '' and params.insertTimeStart != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.insert_time) >= UNIX_TIMESTAMP(#{params.insertTimeStart}) ]]>
+            </if>
+            <if test=" params.insertTimeEnd != '' and params.insertTimeEnd != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.insert_time) <= UNIX_TIMESTAMP(#{params.insertTimeEnd}) ]]>
+            </if>
+            <if test="params.insertTime != null and params.insertTime != ''">
+                and a.insert_time = #{params.insertTime}
+            </if>
+
+        </where>
+        order by a.${params.sort} ${params.order}
+    </select>
+
+</mapper>

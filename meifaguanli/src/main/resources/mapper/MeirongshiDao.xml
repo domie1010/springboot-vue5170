@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.MeirongshiDao">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        a.id as id
+        ,a.username as username
+        ,a.password as password
+        ,a.meirongshi_name as meirongshiName
+        ,a.meirongshi_phone as meirongshiPhone
+        ,a.meirongshi_email as meirongshiEmail
+        ,a.meirongshi_new_money as meirongshiNewMoney
+        ,a.meirongshi_photo as meirongshiPhoto
+        ,a.meirongshi_price as meirongshiPrice
+        ,a.meirongshi_xingji_types as meirongshiXingjiTypes
+        ,a.meirongshi_content as meirongshiContent
+        ,a.create_time as createTime
+    </sql>
+    <select id="selectListView" parameterType="map" resultType="com.entity.view.MeirongshiView" >
+        SELECT
+        <include refid="Base_Column_List" />
+        <!-- 级联表的字段 -->
+
+        FROM meirongshi  a
+
+        <where>
+            <if test="params.ids != null">
+                and a.id in
+                <foreach item="item" index="index" collection="params.ids" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+            </if>
+            <if test=" params.username != '' and params.username != null and params.username != 'null' ">
+                and a.username like CONCAT('%',#{params.username},'%')
+            </if>
+            <if test=" params.password != '' and params.password != null and params.password != 'null' ">
+                and a.password like CONCAT('%',#{params.password},'%')
+            </if>
+            <if test=" params.meirongshiName != '' and params.meirongshiName != null and params.meirongshiName != 'null' ">
+                and a.meirongshi_name like CONCAT('%',#{params.meirongshiName},'%')
+            </if>
+            <if test=" params.meirongshiPhone != '' and params.meirongshiPhone != null and params.meirongshiPhone != 'null' ">
+                and a.meirongshi_phone like CONCAT('%',#{params.meirongshiPhone},'%')
+            </if>
+            <if test=" params.meirongshiEmail != '' and params.meirongshiEmail != null and params.meirongshiEmail != 'null' ">
+                and a.meirongshi_email like CONCAT('%',#{params.meirongshiEmail},'%')
+            </if>
+            <if test="params.meirongshiNewMoneyStart != null ">
+                <![CDATA[  and a.meirongshi_new_money >= #{params.meirongshiNewMoneyStart}   ]]>
+            </if>
+            <if test="params.meirongshiNewMoneyEnd != null ">
+                <![CDATA[  and a.meirongshi_new_money <= #{params.meirongshiNewMoneyEnd}   ]]>
+            </if>
+            <if test="params.meirongshiNewMoney != null and params.meirongshiNewMoney != ''">
+                and a.meirongshi_new_money = #{params.meirongshiNewMoney}
+            </if>
+            <if test="params.meirongshiPriceStart != null and params.meirongshiPriceStart != ''">
+                <![CDATA[  and a.meirongshi_price >= #{params.meirongshiPriceStart}   ]]>
+            </if>
+            <if test="params.meirongshiPriceEnd != null and params.meirongshiPriceEnd != ''">
+                <![CDATA[  and a.meirongshi_price <= #{params.meirongshiPriceEnd}   ]]>
+            </if>
+             <if test="params.meirongshiPrice != null and params.meirongshiPrice != ''">
+                and a.meirongshi_price = #{params.meirongshiPrice}
+             </if>
+            <if test="params.meirongshiXingjiTypes != null and params.meirongshiXingjiTypes != ''">
+                and a.meirongshi_xingji_types = #{params.meirongshiXingjiTypes}
+            </if>
+            <if test=" params.meirongshiContent != '' and params.meirongshiContent != null and params.meirongshiContent != 'null' ">
+                and a.meirongshi_content like CONCAT('%',#{params.meirongshiContent},'%')
+            </if>
+
+        </where>
+        order by a.${params.sort} ${params.order}
+    </select>
+
+</mapper>
